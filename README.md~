@@ -1,0 +1,16 @@
+Project Members:
+Anita Russo (101073718)
+Christopher Hughes (100443694)
+
+Project Synopsis:
+A realtime chat application to be connected with the Tarvn capstone project.
+Users will be able to send messages to other users within their group and 
+send private messages to individual users.
+
+Project Status:
+We have implemented an API to save and retrieve messages in real-time.
+
+Next Steps:
+--> Connect to a database storing usersnames and passwords for authentication
+--> Implement a private messaging system
+
