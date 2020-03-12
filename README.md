@@ -8,6 +8,8 @@ A realtime chat application to be connected with the Tarvn capstone project.
 Users will be able to send messages to other users within their group and 
 send private messages to individual users.
 
+** Please use the SwiftChat.xcworkspace file to run the project! **
+
 ## Project Status
 * We have implemented an API to save and retrieve messages and display them in real-time. 
 * The user can enter a group name and see the messages saved for each individual group.
