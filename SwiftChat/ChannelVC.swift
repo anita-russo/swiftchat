@@ -5,7 +5,9 @@
 //  Created by anita on 2020-02-28.
 //  Copyright © 2020 anita. All rights reserved.
 //
-//  This project uses PubNub API to publish, subscribe, and get the history of our
+//  This project was built using Xcode version 11 & iOS 13 & Swift 5.
+//  Please run the SwiftChat.workspace file.
+//  We are using PubNub API to publish, subscribe, and get the history of our
 //  channel chat messages.
 //
 //  Group Members
