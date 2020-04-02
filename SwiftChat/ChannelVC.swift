@@ -7,14 +7,13 @@
 //
 //  This project was built using Xcode version 11 & iOS 13 & Swift 5.
 //  Please run the SwiftChat.workspace file.
-//  We are using PubNub API to publish, subscribe, and get the history of our
-//  channel chat messages.
-//
-//  Group Members
-//  -------------
-//  ANITA RUSSO         (101073718)
-//  CHRISTOPHER HUGHES  (100443694)
-//  SAAD KHAN           (101157307)
+//  We use the PubNub API for storing and accessing each channel's chat messages and SQLite as a local database to hold usernames and passwords.
+/*
+    Group Members:
+    Anita Russo (101073718)
+    Chris Hughes ()
+    Saad Khan (101157307)
+ */
 
 import UIKit
 import PubNub
@@ -23,6 +22,8 @@ class ChannelVC: UIViewController, PNObjectEventListener, UITableViewDataSource,
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //setting up the tableview and navbar
         self.navigationController?.navigationBar.topItem?.title = channelName
         tableView.delegate = self
         tableView.dataSource = self
@@ -57,7 +58,6 @@ class ChannelVC: UIViewController, PNObjectEventListener, UITableViewDataSource,
             if(result != nil && status == nil){
                 // save when the earliest message was sent in order to get ones previous to it when we want to load more.
                 self.earliestMessageTime = result!.data.start
-                // convert the [Any] package we get into a dictionary of String and Any
                 let messageDict = result!.data.messages as! [[String:String]]
                 // creating new messages from it & putting them at the end of messages array
                 var newMessages :[Message] = []
@@ -68,7 +68,6 @@ class ChannelVC: UIViewController, PNObjectEventListener, UITableViewDataSource,
                 self.messages.insert(contentsOf: newMessages, at: 0)
                 // reload table with new messages & bring tableview down to the bottom to the most recent messages
                 self.tableView.reloadData()
-                // making sure that we wont be able to try to reload more data until this is completed
                 self.loadingMore = false
             }
             else if(status !=  nil){
@@ -92,6 +91,7 @@ class ChannelVC: UIViewController, PNObjectEventListener, UITableViewDataSource,
         return cell
     }
     
+    //on Leave button click, unsubscribe & return to login page
     @IBAction func leaveChannel(_ sender: Any) {
         client.unsubscribeFromAll()
         self.performSegue(withIdentifier: "leaveChannelSegue", sender: self)
@@ -101,7 +101,7 @@ class ChannelVC: UIViewController, PNObjectEventListener, UITableViewDataSource,
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var txtMessage: UITextField!
     
-    
+    //creating a struct to hold message objects
     struct Message {
         var message: String
         var username: String
@@ -113,7 +113,7 @@ class ChannelVC: UIViewController, PNObjectEventListener, UITableViewDataSource,
     var earliestMessageTime: NSNumber = -1
     var loadingMore = false
     
-    //pubnub object to publish, subscribe, and get the history of our channel
+    //client object to publish, subscribe, and get the history of our channel
     var client: PubNub!
     //temporary values
     var channelName = "Channel Name"
@@ -132,9 +132,8 @@ class ChannelVC: UIViewController, PNObjectEventListener, UITableViewDataSource,
         print("Received message in Channel:",message.data.message!)
     }
     
-    // allows users to query for more messages by dragging down from the top.
+    //allows users to query for more messages by dragging down from the top.
     func scrollViewDidScroll(_ scrollView: UIScrollView){
-        // if we are not loading more messages already:
         if(!loadingMore){
             //-40 is when you have dragged down from the top of all the messages
             if(scrollView.contentOffset.y < -40 ) {
@@ -158,12 +157,11 @@ class ChannelVC: UIViewController, PNObjectEventListener, UITableViewDataSource,
             client.publish(messageObject, toChannel: channelName) { (status) in
                 print(status.data.information)
             }
-            //clear text field
             txtMessage.text = ""
         }
     }
     
-    //onclick function for send message button runs function above:
+    //send message button onclick function
     @IBAction func sendBtn(_ sender: Any) {
         publishMessage()
     }
